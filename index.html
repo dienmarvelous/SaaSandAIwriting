@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Synapse — AI, Productivity & Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #050a12;
+    --bg2: #0a1220;
+    --bg3: #0f1a2e;
+    --surface: #111d33;
+    --surface2: #162240;
+    --accent: #00d4ff;
+    --accent2: #7b6fff;
+    --accent3: #00ff9d;
+    --text: #e8f0fe;
+    --text2: #8fa8cc;
+    --text3: #4a6080;
+    --border: rgba(0, 212, 255, 0.12);
+    --border2: rgba(0, 212, 255, 0.25);
+    --glow: 0 0 40px rgba(0, 212, 255, 0.07);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(5, 10, 18, 0.88);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 5%;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+  }
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--text);
+    cursor: default;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-mark {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; color: #050a12;
+  }
+  .nav-links {
+    display: flex; gap: 32px; list-style: none;
+  }
+  .nav-btn {
+    background: none;
+    border: none;
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+  }
+  .nav-btn:hover { color: var(--accent); }
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .nav-cta:hover { background: rgba(0,212,255,0.1); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding: 100px 5% 80px;
+    text-align: center;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid var(--border2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent3);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+  .hero h1 span {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 1.15rem;
+    color: var(--text2);
+    max-width: 560px;
+    margin: 0 auto 40px;
+    font-weight: 300;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    margin-top: 56px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-wrap {
+    position: relative; z-index: 1;
+    padding: 0 5%;
+    max-width: 1200px;
+    margin: 0 auto 80px;
+  }
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 40px;
+  }
+
+  /* ── FEATURED POST ── */
+  .featured-post {
+    position: relative; z-index: 1;
+    padding: 0 5%;
+    max-width: 1200px;
+    margin: 0 auto 80px;
+  }
+  .featured-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: pointer;
+  }
+  .featured-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--glow);
+  }
+  .featured-img {
+    background: var(--bg3);
+    min-height: 380px;
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .featured-img svg { opacity: 0.9; }
+  .featured-content {
+    padding: 48px 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .post-cat {
+    display: inline-block;
+    background: rgba(0,212,255,0.1);
+    color: var(--accent);
+    border: 1px solid rgba(0,212,255,0.3);
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+  .post-cat.green {
+    background: rgba(0,255,157,0.08);
+    color: var(--accent3);
+    border-color: rgba(0,255,157,0.25);
+  }
+  .post-cat.purple {
+    background: rgba(123,111,255,0.1);
+    color: var(--accent2);
+    border-color: rgba(123,111,255,0.3);
+  }
+  .featured-content h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  .featured-content p {
+    color: var(--text2);
+    font-size: 0.97rem;
+    margin-bottom: 28px;
+    line-height: 1.75;
+  }
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 12px;
+    color: var(--text3);
+    font-family: 'Space Mono', monospace;
+  }
+  .read-more {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: gap 0.2s;
+    cursor: pointer;
+    background: none; border: none;
+  }
+  .read-more:hover { gap: 12px; }
+  .read-more::after { content: '→'; }
+
+  /* ── GRID POSTS ── */
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .post-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+  }
+  .post-card:hover {
+    border-color: rgba(123,111,255,0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+  .card-img {
+    height: 180px;
+    background: var(--bg3);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .card-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+  .card-body h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 12px 0 10px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+  .card-body p {
+    font-size: 0.875rem;
+    color: var(--text2);
+    line-height: 1.7;
+    flex: 1;
+    margin-bottom: 20px;
+  }
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--text3);
+  }
+
+  /* ── ARTICLE VIEW ── */
+  .article-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(5, 10, 18, 0.96);
+    backdrop-filter: blur(12px);
+    overflow-y: auto;
+  }
+  .article-overlay.active { display: block; }
+  .article-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 60px 40px 120px;
+  }
+  .article-close {
+    position: fixed;
+    top: 28px; right: 40px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 201;
+    transition: all 0.2s;
+  }
+  .article-close:hover { color: var(--text); border-color: var(--accent); }
+  .article-header { margin-bottom: 48px; }
+  .article-header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--text);
+    margin: 20px 0 20px;
+    letter-spacing: -0.02em;
+  }
+  .article-header .subtitle {
+    font-size: 1.15rem;
+    color: var(--text2);
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  .article-divider {
+    height: 1px;
+    background: var(--border2);
+    margin: 40px 0;
+  }
+  .article-body h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 40px 0 16px;
+    letter-spacing: -0.01em;
+  }
+  .article-body h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 28px 0 12px;
+  }
+  .article-body p {
+    color: var(--text2);
+    font-size: 1.02rem;
+    line-height: 1.85;
+    margin-bottom: 20px;
+  }
+  .article-body ul {
+    margin: 0 0 20px 0;
+    padding-left: 0;
+    list-style: none;
+  }
+  .article-body li {
+    color: var(--text2);
+    font-size: 1rem;
+    line-height: 1.8;
+    padding: 6px 0 6px 24px;
+    position: relative;
+  }
+  .article-body li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 12px;
+    top: 9px;
+  }
+  .article-body .highlight-box {
+    background: rgba(0,212,255,0.05);
+    border: 1px solid var(--border2);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 20px 24px;
+    margin: 28px 0;
+    font-size: 0.97rem;
+    color: var(--text2);
+    line-height: 1.75;
+  }
+  .article-body .stat-callout {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin: 32px 0;
+    text-align: center;
+  }
+  .article-body .stat-callout .big-stat {
+    font-family: 'Syne', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+  }
+  .article-body .stat-callout .stat-desc {
+    font-size: 0.9rem;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+  .article-body .tag {
+    display: inline-block;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text3);
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin: 0 4px 8px 0;
+  }
+
+  /* ── NEWSLETTER ── */
+  .newsletter {
+    position: relative; z-index: 1;
+    padding: 80px 5%;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin: 80px 0;
+  }
+  .newsletter-inner {
+    max-width: 560px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .newsletter h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .newsletter p { color: var(--text2); margin-bottom: 28px; }
+  .newsletter-form {
+    display: flex;
+    gap: 12px;
+  }
+  .newsletter-form input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 12px 18px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .newsletter-form input::placeholder { color: var(--text3); }
+  .newsletter-form input:focus { border-color: var(--accent); }
+  .newsletter-form button {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    color: #050a12;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+  .newsletter-form button:hover { opacity: 0.9; }
+
+  /* ── ABOUT ── */
+  .about-section {
+    position: relative; z-index: 1;
+    padding: 100px 5%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .about-left { position: sticky; top: 100px; }
+  .about-avatar {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(123,111,255,0.2));
+    border: 1.5px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+  .about-left h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .about-left .role {
+    font-size: 13px;
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    margin-bottom: 20px;
+  }
+  .about-left p {
+    font-size: 0.9rem;
+    color: var(--text3);
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  .about-socials {
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .social-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    padding: 6px 14px;
+    border-radius: 100px;
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .social-pill:hover { border-color: var(--accent); color: var(--accent); }
+  .about-right h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 36px 0 12px;
+  }
+  .about-right h3:first-child { margin-top: 0; }
+  .about-right p {
+    font-size: 0.97rem;
+    color: var(--text2);
+    line-height: 1.85;
+    margin-bottom: 16px;
+  }
+  .about-values {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .value-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+  .value-card:hover { border-color: var(--border2); }
+  .value-icon {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .value-card h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .value-card p {
+    font-size: 0.84rem;
+    color: var(--text3);
+    line-height: 1.65;
+    margin: 0;
+  }
+  .about-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 40px 0;
+  }
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .team-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+  }
+  .team-avatar {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+  .team-avatar.teal { background: rgba(0,255,157,0.1); color: var(--accent3); border: 1px solid rgba(0,255,157,0.25); }
+  .team-avatar.blue { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid var(--border2); }
+  .team-avatar.purple { background: rgba(123,111,255,0.1); color: var(--accent2); border: 1px solid rgba(123,111,255,0.3); }
+  .team-card h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .team-card span {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--text3);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 1;
+    padding: 48px 5%;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  footer p {
+    font-size: 13px;
+    color: var(--text3);
+    font-family: 'Space Mono', monospace;
+  }
+  .footer-links {
+    display: flex; gap: 28px; list-style: none;
+  }
+  .footer-links a, .footer-link {
+    color: var(--text3);
+    font-size: 13px;
+    text-decoration: none;
+    cursor: default;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover, .footer-link:hover { color: var(--accent); }
+
+  /* ── ILLUSTRATIONS (SVG inline) ── */
+  .noise {
+    filter: url(#noise);
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <span class="logo">
+      <div class="logo-mark">S</div>
+      Synapse
+    </span>
+    <ul class="nav-links">
+      <li><button onclick="scrollToSection('posts')" class="nav-btn">Articles</button></li>
+      <li><button onclick="scrollToSection('topics')" class="nav-btn">Topics</button></li>
+      <li><button onclick="scrollToSection('newsletter')" class="nav-btn">Newsletter</button></li>
+      <li><button onclick="scrollToSection('about')" class="nav-btn">About</button></li>
+    </ul>
+    <button onclick="scrollToSection('newsletter')" class="nav-cta">Subscribe →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">AI · Productivity · Learning</div>
+  <h1>Think faster.<br><span>Learn smarter.</span><br>Work better.</h1>
+  <p>Deep dives into AI tools, note-taking systems, and productivity science — written for curious minds building their second brain.</p>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num">12K+</span>
+      <span class="stat-label">Readers</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">48</span>
+      <span class="stat-label">Articles</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">100%</span>
+      <span class="stat-label">Free</span>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED POST -->
+<div class="featured-post" id="posts">
+  <div class="featured-card" onclick="openArticle('featured')">
+    <div class="featured-img">
+      <svg width="380" height="380" viewBox="0 0 380 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="rg1" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="#050a12" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="380" height="380" fill="#0a1220"/>
+        <circle cx="190" cy="190" r="140" fill="url(#rg1)"/>
+        <!-- Brain nodes -->
+        <circle cx="190" cy="100" r="18" fill="none" stroke="#00d4ff" stroke-width="1.5" opacity="0.8"/>
+        <circle cx="280" cy="155" r="14" fill="none" stroke="#7b6fff" stroke-width="1.5" opacity="0.7"/>
+        <circle cx="280" cy="245" r="14" fill="none" stroke="#7b6fff" stroke-width="1.5" opacity="0.7"/>
+        <circle cx="190" cy="290" r="18" fill="none" stroke="#00ff9d" stroke-width="1.5" opacity="0.8"/>
+        <circle cx="100" cy="245" r="14" fill="none" stroke="#7b6fff" stroke-width="1.5" opacity="0.7"/>
+        <circle cx="100" cy="155" r="14" fill="none" stroke="#7b6fff" stroke-width="1.5" opacity="0.7"/>
+        <circle cx="190" cy="190" r="28" fill="rgba(0,212,255,0.08)" stroke="#00d4ff" stroke-width="2"/>
+        <!-- Connections -->
+        <line x1="190" y1="118" x2="190" y2="162" stroke="#00d4ff" stroke-width="1" opacity="0.4"/>
+        <line x1="205" y1="103" x2="268" y2="151" stroke="#7b6fff" stroke-width="1" opacity="0.3"/>
+        <line x1="280" y1="169" x2="218" y2="188" stroke="#7b6fff" stroke-width="1" opacity="0.3"/>
+        <line x1="280" y1="231" x2="218" y2="197" stroke="#7b6fff" stroke-width="1" opacity="0.3"/>
+        <line x1="190" y1="272" x2="190" y2="218" stroke="#00ff9d" stroke-width="1" opacity="0.4"/>
+        <line x1="172" y1="277" x2="112" y2="249" stroke="#7b6fff" stroke-width="1" opacity="0.3"/>
+        <line x1="100" y1="231" x2="163" y2="197" stroke="#7b6fff" stroke-width="1" opacity="0.3"/>
+        <line x1="100" y1="169" x2="163" y2="188" stroke="#7b6fff" stroke-width="1" opacity="0.3"/>
+        <line x1="175" y1="104" x2="112" y2="151" stroke="#7b6fff" stroke-width="1" opacity="0.3"/>
+        <!-- Center icon -->
+        <text x="190" y="196" text-anchor="middle" font-family="monospace" font-size="18" fill="#00d4ff" opacity="0.9">AI</text>
+        <!-- Pulse rings -->
+        <circle cx="190" cy="190" r="45" fill="none" stroke="#00d4ff" stroke-width="0.5" opacity="0.2"/>
+        <circle cx="190" cy="190" r="65" fill="none" stroke="#00d4ff" stroke-width="0.5" opacity="0.12"/>
+        <circle cx="190" cy="190" r="90" fill="none" stroke="#00d4ff" stroke-width="0.5" opacity="0.07"/>
+      </svg>
+    </div>
+    <div class="featured-content">
+      <span class="post-cat">Featured</span>
+      <h2>The AI Note-Taking Revolution: How Large Language Models Are Reshaping How We Learn</h2>
+      <p>From basic bullet journals to AI-powered knowledge graphs — the science behind why your notes might be holding you back, and how to fix it with the right tools.</p>
+      <div class="post-meta" style="margin-bottom:24px;">
+        <span>June 1, 2025</span>
+        <span>·</span>
+        <span>9 min read</span>
+        <span>·</span>
+        <span>AI Tools</span>
+      </div>
+      <button class="read-more">Read full article</button>
+    </div>
+  </div>
+</div>
+
+<!-- POSTS GRID -->
+<div class="section-wrap" id="topics">
+  <p class="section-label">Latest Articles</p>
+  <p class="section-title">Explore the knowledge base</p>
+  <div class="posts-grid">
+
+    <!-- Post 1 -->
+    <div class="post-card" onclick="openArticle('post1')">
+      <div class="card-img">
+        <svg width="260" height="180" viewBox="0 0 260 180" fill="none">
+          <rect width="260" height="180" fill="#0f1a2e"/>
+          <rect x="30" y="40" width="200" height="12" rx="6" fill="#7b6fff" opacity="0.3"/>
+          <rect x="30" y="62" width="160" height="8" rx="4" fill="#7b6fff" opacity="0.2"/>
+          <rect x="30" y="80" width="180" height="8" rx="4" fill="#7b6fff" opacity="0.15"/>
+          <rect x="30" y="98" width="140" height="8" rx="4" fill="#7b6fff" opacity="0.1"/>
+          <circle cx="220" cy="50" r="24" fill="rgba(123,111,255,0.12)" stroke="#7b6fff" stroke-width="1.5"/>
+          <text x="220" y="56" text-anchor="middle" font-family="monospace" font-size="16" fill="#7b6fff">⚡</text>
+          <rect x="30" y="120" width="80" height="8" rx="4" fill="#00d4ff" opacity="0.5"/>
+          <rect x="120" y="120" width="60" height="8" rx="4" fill="#00d4ff" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="card-body">
+        <span class="post-cat purple">Productivity</span>
+        <h3>The Pomodoro Method Is Dead — AI Can Now Optimize Your Focus Schedule</h3>
+        <p>Static work-break timers ignore your biology. Here's how AI productivity tools analyze your performance patterns to build a personalized focus system that actually works.</p>
+        <div class="card-footer">
+          <span>May 28, 2025</span>
+          <span>6 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 2 -->
+    <div class="post-card" onclick="openArticle('post2')">
+      <div class="card-img">
+        <svg width="260" height="180" viewBox="0 0 260 180" fill="none">
+          <rect width="260" height="180" fill="#0f1a2e"/>
+          <!-- Nodes network -->
+          <circle cx="70" cy="60" r="10" fill="none" stroke="#00ff9d" stroke-width="1.5" opacity="0.7"/>
+          <circle cx="140" cy="40" r="8" fill="none" stroke="#00ff9d" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="200" cy="70" r="10" fill="none" stroke="#00ff9d" stroke-width="1.5" opacity="0.7"/>
+          <circle cx="130" cy="110" r="14" fill="rgba(0,255,157,0.1)" stroke="#00ff9d" stroke-width="1.5"/>
+          <circle cx="60" cy="130" r="8" fill="none" stroke="#00ff9d" stroke-width="1" opacity="0.5"/>
+          <circle cx="200" cy="130" r="8" fill="none" stroke="#00ff9d" stroke-width="1" opacity="0.5"/>
+          <line x1="70" y1="70" x2="116" y2="100" stroke="#00ff9d" stroke-width="1" opacity="0.3"/>
+          <line x1="140" y1="48" x2="134" y2="96" stroke="#00ff9d" stroke-width="1" opacity="0.3"/>
+          <line x1="200" y1="80" x2="144" y2="102" stroke="#00ff9d" stroke-width="1" opacity="0.3"/>
+          <line x1="120" y1="120" x2="68" y2="128" stroke="#00ff9d" stroke-width="1" opacity="0.25"/>
+          <line x1="144" y1="120" x2="192" y2="128" stroke="#00ff9d" stroke-width="1" opacity="0.25"/>
+          <text x="130" y="115" text-anchor="middle" font-family="monospace" font-size="11" fill="#00ff9d" opacity="0.9">zettel</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <span class="post-cat green">Note-Taking</span>
+        <h3>Zettelkasten + AI: Building a Knowledge System That Grows Smarter Over Time</h3>
+        <p>The Zettelkasten method was revolutionary in the 1960s. Combine it with modern AI tooling and you get something that genuinely compounds your intelligence.</p>
+        <div class="card-footer">
+          <span>May 22, 2025</span>
+          <span>8 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 3 -->
+    <div class="post-card" onclick="openArticle('post3')">
+      <div class="card-img">
+        <svg width="260" height="180" viewBox="0 0 260 180" fill="none">
+          <rect width="260" height="180" fill="#0f1a2e"/>
+          <!-- Study chart -->
+          <rect x="40" y="130" width="20" height="25" rx="3" fill="#00d4ff" opacity="0.4"/>
+          <rect x="70" y="110" width="20" height="45" rx="3" fill="#00d4ff" opacity="0.5"/>
+          <rect x="100" y="90" width="20" height="65" rx="3" fill="#00d4ff" opacity="0.6"/>
+          <rect x="130" y="70" width="20" height="85" rx="3" fill="#00d4ff" opacity="0.7"/>
+          <rect x="160" y="55" width="20" height="100" rx="3" fill="#00d4ff" opacity="0.8"/>
+          <rect x="190" y="40" width="20" height="115" rx="3" fill="#00d4ff" opacity="0.9"/>
+          <!-- curve line -->
+          <path d="M50 130 Q90 95 140 65 Q170 48 200 40" stroke="#7b6fff" stroke-width="1.5" fill="none" opacity="0.6"/>
+          <text x="130" y="30" text-anchor="middle" font-family="monospace" font-size="10" fill="#00d4ff" opacity="0.6">RETENTION CURVE</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <span class="post-cat">Studying</span>
+        <h3>Why Spaced Repetition + AI Flashcards Outperform Every Other Study Method</h3>
+        <p>Cognitive science has known about spaced repetition for decades. AI is finally making it effortless to apply — and the results are striking.</p>
+        <div class="card-footer">
+          <span>May 15, 2025</span>
+          <span>7 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 4 -->
+    <div class="post-card" onclick="openArticle('post4')">
+      <div class="card-img">
+        <svg width="260" height="180" viewBox="0 0 260 180" fill="none">
+          <rect width="260" height="180" fill="#0f1a2e"/>
+          <!-- Comparison table visual -->
+          <rect x="30" y="35" width="200" height="24" rx="6" fill="rgba(123,111,255,0.2)" stroke="#7b6fff" stroke-width="0.5"/>
+          <text x="130" y="52" text-anchor="middle" font-size="10" font-family="monospace" fill="#7b6fff" opacity="0.8">TOOL COMPARISON</text>
+          <rect x="30" y="70" width="90" height="18" rx="4" fill="rgba(0,212,255,0.1)" stroke="#00d4ff" stroke-width="0.5" opacity="0.7"/>
+          <rect x="140" y="70" width="90" height="18" rx="4" fill="rgba(0,255,157,0.08)" stroke="#00ff9d" stroke-width="0.5" opacity="0.7"/>
+          <rect x="30" y="98" width="90" height="18" rx="4" fill="rgba(0,212,255,0.06)" opacity="0.6"/>
+          <rect x="140" y="98" width="90" height="18" rx="4" fill="rgba(0,255,157,0.06)" opacity="0.6"/>
+          <rect x="30" y="126" width="90" height="18" rx="4" fill="rgba(0,212,255,0.06)" opacity="0.6"/>
+          <rect x="140" y="126" width="90" height="18" rx="4" fill="rgba(0,255,157,0.06)" opacity="0.6"/>
+          <text x="75" y="83" text-anchor="middle" font-size="9" font-family="monospace" fill="#00d4ff" opacity="0.7">Notion AI</text>
+          <text x="185" y="83" text-anchor="middle" font-size="9" font-family="monospace" fill="#00ff9d" opacity="0.7">Obsidian</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <span class="post-cat">AI Tools</span>
+        <h3>Notion AI vs Obsidian + Copilot: Which AI Note Tool Wins in 2025?</h3>
+        <p>A deep, honest comparison of the two dominant AI-augmented note-taking platforms — including real workflow tests and honest trade-offs.</p>
+        <div class="card-footer">
+          <span>May 10, 2025</span>
+          <span>10 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 5 -->
+    <div class="post-card" onclick="openArticle('post5')">
+      <div class="card-img">
+        <svg width="260" height="180" viewBox="0 0 260 180" fill="none">
+          <rect width="260" height="180" fill="#0f1a2e"/>
+          <circle cx="130" cy="90" r="55" fill="none" stroke="#00d4ff" stroke-width="0.5" stroke-dasharray="4 4" opacity="0.4"/>
+          <circle cx="130" cy="90" r="35" fill="none" stroke="#7b6fff" stroke-width="0.5" stroke-dasharray="3 3" opacity="0.4"/>
+          <circle cx="130" cy="90" r="18" fill="rgba(0,212,255,0.08)" stroke="#00d4ff" stroke-width="1"/>
+          <text x="130" y="95" text-anchor="middle" font-family="monospace" font-size="14" fill="#00d4ff">🧠</text>
+          <!-- orbit dots -->
+          <circle cx="130" cy="35" r="5" fill="#7b6fff" opacity="0.8"/>
+          <circle cx="185" cy="90" r="5" fill="#00ff9d" opacity="0.8"/>
+          <circle cx="130" cy="145" r="5" fill="#7b6fff" opacity="0.8"/>
+          <circle cx="75" cy="90" r="5" fill="#00d4ff" opacity="0.8"/>
+          <text x="130" y="29" text-anchor="middle" font-size="8" font-family="monospace" fill="#7b6fff" opacity="0.7">CONTEXT</text>
+          <text x="196" y="93" font-size="8" font-family="monospace" fill="#00ff9d" opacity="0.7">RECALL</text>
+          <text x="130" y="159" text-anchor="middle" font-size="8" font-family="monospace" fill="#7b6fff" opacity="0.7">ENCODE</text>
+          <text x="18" y="93" font-size="8" font-family="monospace" fill="#00d4ff" opacity="0.7">LINK</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <span class="post-cat green">Studying</span>
+        <h3>Active Recall in the Age of AI: Stop Re-Reading, Start Retrieving</h3>
+        <p>Re-reading your notes gives you a false sense of mastery. Here's the neuroscience behind active recall and how AI learning platforms are automating the hardest part.</p>
+        <div class="card-footer">
+          <span>May 5, 2025</span>
+          <span>5 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 6 -->
+    <div class="post-card" onclick="openArticle('post6')">
+      <div class="card-img">
+        <svg width="260" height="180" viewBox="0 0 260 180" fill="none">
+          <rect width="260" height="180" fill="#0f1a2e"/>
+          <!-- Terminal/code feel -->
+          <rect x="30" y="30" width="200" height="120" rx="8" fill="#050a12" stroke="rgba(0,212,255,0.2)" stroke-width="1"/>
+          <rect x="30" y="30" width="200" height="24" rx="8" fill="rgba(0,212,255,0.08)"/>
+          <circle cx="48" cy="42" r="5" fill="#ff5f57" opacity="0.8"/>
+          <circle cx="64" cy="42" r="5" fill="#febc2e" opacity="0.8"/>
+          <circle cx="80" cy="42" r="5" fill="#28c840" opacity="0.8"/>
+          <text x="46" y="70" font-family="monospace" font-size="9" fill="#00d4ff" opacity="0.7">$ ai summarize ./notes.md</text>
+          <text x="46" y="88" font-family="monospace" font-size="9" fill="#00ff9d" opacity="0.6">✓ 3 key insights extracted</text>
+          <text x="46" y="104" font-family="monospace" font-size="9" fill="#00ff9d" opacity="0.5">✓ Action items: 4</text>
+          <text x="46" y="120" font-family="monospace" font-size="9" fill="#7b6fff" opacity="0.5">→ Summary saved to /output</text>
+          <text x="46" y="138" font-family="monospace" font-size="9" fill="#00d4ff" opacity="0.7">█</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <span class="post-cat purple">AI Tools</span>
+        <h3>10 AI Prompts That Will Transform Your Meeting Notes Into Action Plans</h3>
+        <p>Stop letting meeting notes decay in a folder. These battle-tested prompts turn raw notes into structured summaries, decisions logs, and follow-up tasks automatically.</p>
+        <div class="card-footer">
+          <span>Apr 30, 2025</span>
+          <span>4 min read</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- NEWSLETTER -->
+<div class="newsletter" id="newsletter">
+  <div class="newsletter-inner">
+    <p class="section-label" style="margin-bottom:8px;">Stay in the loop</p>
+    <h2>Get smarter every week</h2>
+    <p>One email every Wednesday — new AI tools, productivity frameworks, and study science. No fluff.</p>
+    <div class="newsletter-form">
+      <input type="email" placeholder="your@email.com"/>
+      <button>Subscribe →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" style="border-top: 1px solid var(--border);">
+  <div class="about-section">
+    <div class="about-grid">
+
+      <!-- LEFT: Author card -->
+      <div class="about-left">
+        <div class="about-avatar">S</div>
+        <h2>The Synapse Team</h2>
+        <p class="role">AI · Productivity · Learning</p>
+        <p>We're a small team of researchers, writers, and productivity nerds obsessed with the science of how humans learn — and how AI is changing it.</p>
+        <div class="about-socials">
+          <span class="social-pill">Twitter</span>
+          <span class="social-pill">LinkedIn</span>
+          <span class="social-pill">RSS Feed</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: Content -->
+      <div class="about-right">
+
+        <h3>Why we built Synapse</h3>
+        <p>The internet is full of productivity content — but most of it is surface-level tips recycled from the same five books. We wanted something different: deeply researched, scientifically grounded writing about how minds work and how AI tools are genuinely changing the game for learners, students, and knowledge workers.</p>
+        <p>Synapse started as an internal newsletter for a team of researchers who were frustrated that the best insights about AI-augmented learning were buried in academic papers, scattered across forums, or locked behind paywalls. We decided to surface them — clearly, honestly, and for free.</p>
+
+        <div class="about-divider"></div>
+
+        <h3>What we believe</h3>
+        <div class="about-values">
+          <div class="value-card">
+            <span class="value-icon">01 — Science first</span>
+            <h4>Evidence over hype</h4>
+            <p>Every claim we make is grounded in cognitive science, peer-reviewed research, or verified real-world testing. We cite our sources and admit what we don't know.</p>
+          </div>
+          <div class="value-card">
+            <span class="value-icon">02 — Depth</span>
+            <h4>Go beyond the surface</h4>
+            <p>We don't write listicles. Every article on Synapse earns its length — we only publish when we have something genuinely useful to say.</p>
+          </div>
+          <div class="value-card">
+            <span class="value-icon">03 — Honesty</span>
+            <h4>Unsponsored opinions</h4>
+            <p>We don't take affiliate deals or sponsored placements. When we recommend a tool, it's because we actually use it and believe in it.</p>
+          </div>
+          <div class="value-card">
+            <span class="value-icon">04 — Practicality</span>
+            <h4>Real workflows, not theory</h4>
+            <p>Every framework we cover has been stress-tested in actual work and study environments. If it doesn't hold up in practice, we say so.</p>
+          </div>
+        </div>
+
+        <div class="about-divider"></div>
+
+        <h3>Who writes here</h3>
+        <p>Synapse is written by a rotating team of contributors with backgrounds in cognitive science, software engineering, education, and professional knowledge work. Every article is reviewed for accuracy before publication.</p>
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-avatar blue">AK</div>
+            <h4>Amara Kline</h4>
+            <span>Cognitive Science · AI</span>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar teal">JP</div>
+            <h4>Jonas Park</h4>
+            <span>Productivity · SaaS</span>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar purple">LO</div>
+            <h4>Leila Osei</h4>
+            <span>Learning Design · EdTech</span>
+          </div>
+        </div>
+
+        <div class="about-divider"></div>
+
+        <h3>Why "Synapse"?</h3>
+        <p>A synapse is the junction between two neurons — the precise point where one thought connects to another and a memory is formed. It's the biological mechanism behind every insight, every skill, every thing you've ever learned.</p>
+        <p>It's also the model behind every artificial neural network: AI systems that learn by strengthening connections between nodes, just as your brain does. The name felt inevitable for a publication sitting exactly at the intersection of human cognition and machine intelligence.</p>
+        <p>We think the most interesting questions right now live at that junction — how human and artificial intelligence can work together to help people think more clearly, learn more deeply, and do their best work. That's what Synapse is about.</p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Synapse Blog — AI · Productivity · Learning</p>
+  <ul class="footer-links">
+    <li><span class="footer-link" onclick="scrollToSection('about')" style="cursor:pointer;">About</span></li>
+    <li><span class="footer-link">Archive</span></li>
+    <li><span class="footer-link">Twitter</span></li>
+  </ul>
+</footer>
+
+<!-- ARTICLE OVERLAY -->
+<div class="article-overlay" id="articleOverlay">
+  <button class="article-close" onclick="closeArticle()">✕</button>
+  <div class="article-inner" id="articleContent"></div>
+</div>
+
+<script>
+function scrollToSection(id) {
+  var el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+const articles = {
+  featured: {
+    cat: 'AI Tools', catClass: '',
+    title: 'The AI Note-Taking Revolution: How Large Language Models Are Reshaping How We Learn',
+    subtitle: 'From basic bullet journals to AI-powered knowledge graphs — the science behind why your notes might be holding you back, and how to fix it.',
+    date: 'June 1, 2025', read: '9 min read',
+    tags: ['AI Tools', 'Note-Taking', 'LLMs', 'Productivity', 'PKM'],
+    body: `
+      <p>For most of human history, note-taking was a deeply personal, often analog practice. Aristotle had his wax tablets. Da Vinci had his notebooks. You, probably, have a chaotic mix of Notion pages, sticky notes, and half-remembered voice memos.</p>
+      <p>The problem isn't that we're lazy. It's that our tools have never been designed for how memory actually works.</p>
+
+      <div class="stat-callout">
+        <span class="big-stat">92%</span>
+        <span class="stat-desc">of students say they re-read notes as their primary study method — despite it being one of the least effective techniques according to cognitive science.</span>
+      </div>
+
+      <h2>Why Traditional Note-Taking Fails</h2>
+      <p>The core flaw in most note-taking approaches is that they optimize for capture, not for retrieval. We write things down to remember them — but the act of writing linearly creates information silos. Your note from last Tuesday has no idea your note from six months ago exists.</p>
+      <p>This is where large language models change everything. AI doesn't just store information — it can find connections across thousands of notes in milliseconds, surfaces ideas you'd forgotten, and can reframe your own knowledge in ways that create genuine insight.</p>
+
+      <h2>What AI-Powered Note-Taking Actually Looks Like</h2>
+      <p>Modern AI note-taking platforms do several things that are genuinely new:</p>
+      <ul>
+        <li><strong>Semantic search</strong> — instead of keyword matching, AI understands what you mean. Ask "what did I capture about delegation?" and it finds relevant notes even if you never used the word "delegation."</li>
+        <li><strong>Automatic linking</strong> — the AI suggests connections between notes based on conceptual similarity, not just shared tags.</li>
+        <li><strong>Synthesis on demand</strong> — ask "what are the recurring themes in my work notes from Q1?" and get an actual summary.</li>
+        <li><strong>Intelligent flashcard generation</strong> — AI reads your notes and generates spaced-repetition cards calibrated to what you actually need to remember.</li>
+      </ul>
+
+      <div class="highlight-box">
+        The shift from note-taking to knowledge management isn't just semantic — it represents a fundamentally different relationship between you and your information. AI is the bridge that makes that shift practical.
+      </div>
+
+      <h2>The Best Tools in 2025</h2>
+      <p>The landscape has evolved rapidly. Tools like Notion AI, Mem.ai, Obsidian with AI plugins, and dedicated learning platforms have each carved out distinct niches. The right choice depends heavily on your workflow — a researcher's needs differ from a student's or a product manager's.</p>
+      <p>What they share is a core capability: turning passive note archives into active knowledge systems that help you think, not just record.</p>
+
+      <h2>How to Start</h2>
+      <p>You don't need to rebuild your entire system overnight. Start with one change: enable semantic search on your existing notes. Just that single feature will change how you relate to your past thinking — and make obvious why the rest of the stack is worth exploring.</p>
+      <p>The future of note-taking isn't about writing better notes. It's about building a system that gets smarter every time you add to it. AI makes that possible today.</p>
+    `
+  },
+  post1: {
+    cat: 'Productivity', catClass: 'purple',
+    title: 'The Pomodoro Method Is Dead — AI Can Now Optimize Your Focus Schedule',
+    subtitle: 'Static work-break timers ignore your biology. Here\'s how AI productivity tools build a personalized focus system that actually works.',
+    date: 'May 28, 2025', read: '6 min read',
+    tags: ['Productivity', 'Focus', 'AI Tools', 'Deep Work'],
+    body: `
+      <p>The Pomodoro Technique was invented in the late 1980s by Francesco Cirillo, who used a tomato-shaped kitchen timer to break his work into 25-minute intervals. For its time, it was a revelation. It gave people a framework for managing attention — a resource that most of us had never consciously thought about.</p>
+      <p>But here's the problem: 25 minutes is the same for everyone. And everyone's brain is very different.</p>
+
+      <div class="stat-callout">
+        <span class="big-stat">52 min</span>
+        <span class="stat-desc">The average optimal focus window found by DeskTime research — but this varies significantly by individual, task type, and time of day.</span>
+      </div>
+
+      <h2>The Myth of the Universal Focus Block</h2>
+      <p>Cognitive research has repeatedly shown that peak focus periods vary dramatically between individuals. Some people enter flow states after 40 minutes of ramp-up. Others hit peak performance in shorter, sharper bursts. Morning larks and night owls aren't just personality types — they reflect genuine differences in cortisol rhythms, adenosine buildup, and circadian biology.</p>
+      <p>A one-size-fits-all timer can't know any of this. But AI can learn it.</p>
+
+      <h2>What AI-Optimized Focus Looks Like</h2>
+      <ul>
+        <li>Tracking your actual output quality over time, not just whether a timer went off</li>
+        <li>Correlating focus performance with time of day, sleep quality, and task type</li>
+        <li>Suggesting when to take breaks based on keystroke patterns or calendar density</li>
+        <li>Automatically blocking distractions during your personal peak windows</li>
+        <li>Learning which types of work you do best at which times</li>
+      </ul>
+
+      <div class="highlight-box">
+        The goal isn't to replace discipline with automation — it's to stop fighting your own biology and start working with it. AI gives you the data to do that.
+      </div>
+
+      <h2>Tools Worth Trying</h2>
+      <p>Reclaim.ai, Motion, and Structured are leading this space. They pull from your calendar, task lists, and even communication patterns to build dynamic daily schedules — not fixed templates. Some integrate with wearables to layer in physiological data.</p>
+      <p>The shift is from "work for 25 minutes, break for 5" to "work deeply when your biology is aligned, and protect that time intentionally." That's not a small difference. For many people, it's a complete transformation in how much they get done.</p>
+    `
+  },
+  post2: {
+    cat: 'Note-Taking', catClass: 'green',
+    title: 'Zettelkasten + AI: Building a Knowledge System That Grows Smarter Over Time',
+    subtitle: 'The Zettelkasten method was revolutionary in the 1960s. Combine it with modern AI tooling and you get something that genuinely compounds your intelligence.',
+    date: 'May 22, 2025', read: '8 min read',
+    tags: ['Zettelkasten', 'PKM', 'Note-Taking', 'Obsidian', 'AI'],
+    body: `
+      <p>Niklas Luhmann was a German sociologist who, between 1952 and 1997, published 70 books and nearly 400 academic articles. His secret? A wooden slip-box containing over 90,000 hand-written index cards — each linked to others in a web of interconnected ideas.</p>
+      <p>He called it his Zettelkasten — German for "slip box." And he credited it with being an intellectual partner, not just a storage system.</p>
+
+      <h2>The Core Principles</h2>
+      <p>Zettelkasten works on a few key ideas that run counter to most note-taking instincts:</p>
+      <ul>
+        <li>Every note is atomic — one idea per note, expressed completely in your own words</li>
+        <li>Notes are linked to each other, not organized in folders or hierarchies</li>
+        <li>The value isn't in individual notes — it's in the connections between them</li>
+        <li>The system should surface unexpected connections and generate new ideas</li>
+      </ul>
+
+      <div class="stat-callout">
+        <span class="big-stat">90,000+</span>
+        <span class="stat-desc">Notes in Luhmann's original Zettelkasten — each one linked, each one in his own words, forming a second brain that outlived him.</span>
+      </div>
+
+      <h2>Where AI Changes the Game</h2>
+      <p>The original method required enormous manual effort to maintain links and surface connections. That friction stopped most people who tried it. AI removes that friction entirely.</p>
+      <p>Modern tools with AI integration can automatically suggest links between new notes and existing ones, find thematic clusters you haven't noticed, and even synthesize a "state of your thinking" on any topic across all your notes.</p>
+
+      <div class="highlight-box">
+        The Zettelkasten principle — that knowledge grows through connection, not collection — is more true in the age of AI than ever. The difference is that AI handles the mechanical work of finding connections. You focus on the thinking.
+      </div>
+
+      <h2>Getting Started Today</h2>
+      <p>You don't need 90,000 notes to start. Begin with 10 atomic notes on a topic you know well. Link them manually at first — this teaches you the thinking. Then add an AI plugin to see what it surfaces that you missed. Most people are surprised within the first week.</p>
+    `
+  },
+  post3: {
+    cat: 'Studying', catClass: '',
+    title: 'Why Spaced Repetition + AI Flashcards Outperform Every Other Study Method',
+    subtitle: 'Cognitive science has known about spaced repetition for decades. AI is finally making it effortless to apply — and the results are striking.',
+    date: 'May 15, 2025', read: '7 min read',
+    tags: ['Studying', 'Spaced Repetition', 'Flashcards', 'Anki', 'Learning Science'],
+    body: `
+      <p>In 1885, German psychologist Hermann Ebbinghaus plotted what he called the "forgetting curve" — a graph showing how memory decays exponentially after learning. Without reinforcement, you forget roughly 70% of new information within 24 hours.</p>
+      <p>He also discovered the solution: reviewing information at precisely the right intervals before you forget it dramatically extends retention. He called this spaced repetition.</p>
+      <p>One hundred and forty years later, most students still study by re-reading their notes the night before an exam. Spaced repetition remains criminally underused — largely because it was always annoying to implement manually.</p>
+      <p>AI has changed that completely.</p>
+
+      <div class="stat-callout">
+        <span class="big-stat">200%</span>
+        <span class="stat-desc">Improvement in long-term retention reported in studies comparing spaced repetition to massed practice (cramming).</span>
+      </div>
+
+      <h2>What Makes Spaced Repetition Work</h2>
+      <p>The mechanism is straightforward: you review a piece of information just as you're about to forget it. This "desirable difficulty" forces your brain to reconstruct the memory, strengthening the neural pathway in the process. Each successful retrieval extends the interval before the next review.</p>
+
+      <ul>
+        <li>New card → review tomorrow</li>
+        <li>Remembered → review in 3 days</li>
+        <li>Remembered again → review in 8 days</li>
+        <li>Each success → longer interval</li>
+        <li>Struggle or fail → interval resets</li>
+      </ul>
+
+      <h2>Where AI Comes In</h2>
+      <p>Traditional spaced repetition tools like Anki required you to manually create every flashcard. This was the biggest barrier. AI eliminates it.</p>
+      <p>Modern AI learning platforms can read your notes, lecture slides, or textbook chapters and automatically generate high-quality flashcards — including cloze deletions, question-answer pairs, and even image occlusion cards. They also adapt the scheduling algorithm based on your actual performance patterns, not just a generic curve.</p>
+
+      <div class="highlight-box">
+        The combination of AI card generation and adaptive spaced repetition scheduling is, arguably, the most significant advance in study methodology in decades. It makes the optimal learning strategy effortless for the first time.
+      </div>
+
+      <h2>The Tools Leading This Space</h2>
+      <p>Anki with AI plugins, RemNote, Mochi, and newer entrants like Recall.ai are all worth exploring. The right choice depends on whether you want deep customization or a frictionless out-of-the-box experience. For most learners starting out, RemNote or Recall offer the best balance.</p>
+    `
+  },
+  post4: {
+    cat: 'AI Tools', catClass: '',
+    title: 'Notion AI vs Obsidian + Copilot: Which AI Note Tool Wins in 2025?',
+    subtitle: 'A deep, honest comparison of the two dominant AI-augmented note-taking platforms — including real workflow tests and honest trade-offs.',
+    date: 'May 10, 2025', read: '10 min read',
+    tags: ['Notion', 'Obsidian', 'AI Tools', 'Comparison', 'PKM'],
+    body: `
+      <p>If you've spent any time in productivity circles, you know this debate. Notion people and Obsidian people argue with the intensity of a religion. Add AI to both and the debate gets even more interesting — and more practically important.</p>
+      <p>Let's cut through the noise.</p>
+
+      <h2>The Fundamental Difference</h2>
+      <p>Notion AI is a cloud-based, all-in-one workspace with AI baked in natively. Obsidian is a local-first, plain-text knowledge base that you extend with plugins — including AI plugins like Copilot, Smart Second Brain, and others.</p>
+      <p>This distinction shapes everything that follows.</p>
+
+      <h2>Notion AI: Strengths</h2>
+      <ul>
+        <li>Zero setup — AI features work out of the box</li>
+        <li>Excellent for collaborative teams and shared workspaces</li>
+        <li>AI can summarize, rewrite, translate, and generate content inline</li>
+        <li>Strong database functionality for structured information</li>
+        <li>Consistently improving with frequent updates</li>
+      </ul>
+
+      <h2>Notion AI: Weaknesses</h2>
+      <ul>
+        <li>Your data lives in Notion's cloud — privacy-sensitive users take note</li>
+        <li>AI features add significant cost to an already-premium product</li>
+        <li>Semantic search is improving but still lags behind purpose-built tools</li>
+        <li>Can feel heavy for pure note-taking workflows</li>
+      </ul>
+
+      <div class="highlight-box">
+        Notion AI shines for teams and project management use cases. If your notes are deeply tied to tasks, projects, and collaboration — Notion wins.
+      </div>
+
+      <h2>Obsidian + AI Plugins: Strengths</h2>
+      <ul>
+        <li>Full local control — your data stays on your device</li>
+        <li>Incredibly extensible — choose exactly which AI capabilities you want</li>
+        <li>The graph view + AI linking creates a genuinely powerful knowledge graph</li>
+        <li>One-time purchase model — no ongoing subscription for the base app</li>
+        <li>Beloved by researchers, writers, and power users</li>
+      </ul>
+
+      <h2>Obsidian + AI Plugins: Weaknesses</h2>
+      <ul>
+        <li>Setup friction is real — requires technical comfort and plugin management</li>
+        <li>AI features require separate API keys and configuration</li>
+        <li>No native collaboration features (third-party sync required)</li>
+        <li>The learning curve can be steep for newcomers</li>
+      </ul>
+
+      <div class="stat-callout">
+        <span class="big-stat">1M+</span>
+        <span class="stat-desc">Active Obsidian users as of 2025 — a remarkable number for a tool that requires meaningful setup investment.</span>
+      </div>
+
+      <h2>The Verdict</h2>
+      <p>For teams and people who value ease: Notion AI. For individuals who prioritize data ownership, deep knowledge work, and long-term knowledge building: Obsidian. The good news is you don't have to pick just one — many serious knowledge workers use both, with Notion for projects and Obsidian for their personal knowledge base.</p>
+    `
+  },
+  post5: {
+    cat: 'Studying', catClass: 'green',
+    title: 'Active Recall in the Age of AI: Stop Re-Reading, Start Retrieving',
+    subtitle: 'Re-reading your notes gives you a false sense of mastery. Here\'s the neuroscience behind active recall and how AI is automating the hardest part.',
+    date: 'May 5, 2025', read: '5 min read',
+    tags: ['Active Recall', 'Memory', 'Learning Science', 'AI', 'Study Methods'],
+    body: `
+      <p>Here's a scenario most students know well: you read through your notes, everything feels familiar, and you feel reasonably confident going into the exam. Then the exam arrives and the answers that felt so clear somehow aren't there.</p>
+      <p>This phenomenon has a name: the fluency illusion. Recognition — the sense that something is familiar — feels like learning. But it isn't. Learning requires retrieval.</p>
+
+      <h2>Why Re-Reading Doesn't Work</h2>
+      <p>When you re-read notes, your brain recognizes the content and generates a feeling of familiarity. This feels like learning but it isn't — it's recognition, not recall. The two feel identical from the inside, but they use entirely different memory processes and produce dramatically different results on tests.</p>
+
+      <div class="stat-callout">
+        <span class="big-stat">50%</span>
+        <span class="stat-desc">Better long-term retention in studies comparing active retrieval practice against re-reading the same material.</span>
+      </div>
+
+      <h2>What Active Recall Actually Means</h2>
+      <p>Active recall means closing your notes and trying to remember — not recognize — what you learned. It's uncomfortable. The struggle is the point. Every time you successfully retrieve a memory, you strengthen the neural pathway. Every time you fail and then check, you update the encoding.</p>
+      <ul>
+        <li>Close your notes and write everything you remember</li>
+        <li>Answer questions without looking at the material</li>
+        <li>Explain a concept out loud as if teaching someone</li>
+        <li>Use flashcards — the original retrieval tool</li>
+      </ul>
+
+      <h2>How AI Removes the Friction</h2>
+      <p>The main reason people don't use active recall consistently is that generating good questions is tedious. You have to read your notes, understand them well enough to create questions, and then test yourself — all before you've even started studying.</p>
+      <p>AI eliminates this step entirely. Tools like Recall.ai, RemNote AI, and even ChatGPT-based workflows can read your notes and generate precise retrieval questions, cloze deletions, and Socratic prompts automatically.</p>
+
+      <div class="highlight-box">
+        The bottleneck to better studying was never motivation. It was friction. AI removes the friction from the most effective learning technique we know — active retrieval practice. That's a big deal.
+      </div>
+    `
+  },
+  post6: {
+    cat: 'AI Tools', catClass: 'purple',
+    title: '10 AI Prompts That Will Transform Your Meeting Notes Into Action Plans',
+    subtitle: 'Stop letting meeting notes decay in a folder. These prompts turn raw notes into structured summaries, decisions logs, and follow-up tasks — automatically.',
+    date: 'April 30, 2025', read: '4 min read',
+    tags: ['Prompts', 'Meeting Notes', 'AI Tools', 'Productivity', 'Workflow'],
+    body: `
+      <p>The average knowledge worker spends 23 hours per week in meetings. A significant portion of that time produces notes that sit unreviewed in a folder until they're irrelevant.</p>
+      <p>AI can change this — but only if you know how to use it. Generic prompts produce generic outputs. These prompts are designed for the specific task of converting raw meeting notes into something you'll actually act on.</p>
+
+      <h2>The Core Prompts</h2>
+
+      <h3>1. The Decision Log</h3>
+      <div class="highlight-box">
+        "Read these meeting notes and extract every decision that was made. For each decision, list: what was decided, who owns it, and any stated rationale. Format as a numbered list."
+      </div>
+
+      <h3>2. The Action Item Extractor</h3>
+      <div class="highlight-box">
+        "From these notes, extract all action items. For each item, identify: the task, the person responsible, and any mentioned deadline. If no deadline was stated, flag it as '[deadline needed]'."
+      </div>
+
+      <h3>3. The Executive Summary</h3>
+      <div class="highlight-box">
+        "Summarize these meeting notes in 3 sentences for someone who wasn't present. Focus on outcomes and decisions, not discussion."
+      </div>
+
+      <h3>4. The Open Questions Finder</h3>
+      <div class="highlight-box">
+        "Identify every question that was raised in these notes but not definitively answered. List each open question and who raised it."
+      </div>
+
+      <h3>5. The Risk Spotter</h3>
+      <div class="highlight-box">
+        "Scan these notes for any concerns, risks, blockers, or unresolved tensions that were mentioned. List each one clearly."
+      </div>
+
+      <h3>6. The Follow-Up Email Draft</h3>
+      <div class="highlight-box">
+        "Using these meeting notes, draft a follow-up email to all attendees. Include: a brief summary, the decisions made, the action items with owners, and next steps. Professional but conversational tone."
+      </div>
+
+      <div class="stat-callout">
+        <span class="big-stat">4 min</span>
+        <span class="stat-desc">Average time to process a 60-minute meeting with AI prompts vs 25+ minutes manually — and the AI version is often more complete.</span>
+      </div>
+
+      <h2>Making It a Habit</h2>
+      <p>The prompts only work if you use them consistently. The best approach: keep a template in your notes app with your top 3 prompts. Immediately after any significant meeting, paste your notes in and run them. This takes under five minutes and produces more useful output than most people create in an hour of manual processing.</p>
+      <p>Your future self will thank you when you can actually remember what was decided three weeks ago.</p>
+    `
+  }
+};
+
+function openArticle(id) {
+  const a = articles[id];
+  if (!a) return;
+  const overlay = document.getElementById('articleOverlay');
+  const content = document.getElementById('articleContent');
+  content.innerHTML = `
+    <div class="article-header">
+      <span class="post-cat ${a.catClass}">${a.cat}</span>
+      <h1>${a.title}</h1>
+      <p class="subtitle">${a.subtitle}</p>
+      <div class="post-meta">${a.date} · ${a.read}</div>
+    </div>
+    <div class="article-divider"></div>
+    <div class="article-body">${a.body}</div>
+    <div class="article-divider" style="margin-top:48px;"></div>
+    <div style="margin-top:24px;">
+      ${a.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+    </div>
+  `;
+  overlay.classList.add('active');
+  overlay.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeArticle() {
+  document.getElementById('articleOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('articleOverlay').addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeArticle();
+});
+</script>
+</body>
+</html>
